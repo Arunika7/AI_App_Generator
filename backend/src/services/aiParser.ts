@@ -44,7 +44,7 @@ export const parsePromptToConfig = (prompt: string, currentConfig?: AppConfig) =
         if (!activeEntity!.fields.some(f => f.name === word) && word !== "field") {
           activeEntity!.fields.push({
             name: word,
-            type: FIELD_TYPE_MAP[word] || "text",
+            type: (FIELD_TYPE_MAP[word] || "text") as "text" | "number" | "email" | "date",
             required: false
           });
         }
@@ -65,7 +65,8 @@ export const parsePromptToConfig = (prompt: string, currentConfig?: AppConfig) =
   let suggestedFields = new Set<string>();
   let suggestions: string[] = [];
 
-  for (const [key, data] of Object.entries(COMMON_ENTITIES)) {
+  for (const key of Object.keys(COMMON_ENTITIES)) {
+    const data = COMMON_ENTITIES[key];
     if (normalized.includes(key) || data.synonyms.some(s => normalized.includes(s))) {
       detectedEntity = key;
       data.defaultFields.forEach(f => suggestedFields.add(f));
@@ -91,7 +92,7 @@ export const parsePromptToConfig = (prompt: string, currentConfig?: AppConfig) =
 
   const fields = Array.from(suggestedFields).map(f => ({
     name: f,
-    type: FIELD_TYPE_MAP[f] || "text",
+    type: (FIELD_TYPE_MAP[f] || "text") as "text" | "number" | "email" | "date",
     required: f === "name" || f === "title" || f === "email"
   }));
 

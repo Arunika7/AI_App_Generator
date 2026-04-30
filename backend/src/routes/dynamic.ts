@@ -18,6 +18,15 @@ export const setAppConfig = (config: AppConfig) => {
 const router = Router();
 const upload = multer({ dest: "uploads/" }); // Temporary storage for CSV
 
+// Wrapper to dynamically enable/disable auth based on config
+const conditionalAuth = (req: AuthRequest, res: Response, next: Function) => {
+  if (!currentConfig.auth) {
+    req.user = { id: 0, email: "guest@system.local" };
+    return next();
+  }
+  return authMiddleware(req, res, next as any);
+};
+
 // Middleware to validate entity existence
 const validateEntity = (req: AuthRequest, res: Response, next: Function) => {
   const { entity } = req.params;
@@ -35,7 +44,7 @@ const validateEntity = (req: AuthRequest, res: Response, next: Function) => {
 };
 
 // GET /api/dynamic/:entity
-router.get("/:entity", authMiddleware, validateEntity, async (req: AuthRequest, res: Response) => {
+router.get("/:entity", conditionalAuth, validateEntity, async (req: AuthRequest, res: Response) => {
   const entity = req.params.entity as string;
   const userId = req.user!.id;
 
@@ -55,7 +64,7 @@ router.get("/:entity", authMiddleware, validateEntity, async (req: AuthRequest, 
 });
 
 // POST /api/dynamic/:entity
-router.post("/:entity", authMiddleware, validateEntity, async (req: AuthRequest, res: Response) => {
+router.post("/:entity", conditionalAuth, validateEntity, async (req: AuthRequest, res: Response) => {
   const entity = req.params.entity as string;
   const entityConfig = (req as any).entityConfig;
   const userId = req.user!.id;
@@ -84,7 +93,7 @@ router.post("/:entity", authMiddleware, validateEntity, async (req: AuthRequest,
 });
 
 // PUT /api/dynamic/:entity/:id
-router.put("/:entity/:id", authMiddleware, validateEntity, async (req: AuthRequest, res: Response) => {
+router.put("/:entity/:id", conditionalAuth, validateEntity, async (req: AuthRequest, res: Response) => {
   const entity = req.params.entity as string;
   const id = req.params.id as string;
   const entityConfig = (req as any).entityConfig;
@@ -135,7 +144,7 @@ router.put("/:entity/:id", authMiddleware, validateEntity, async (req: AuthReque
 });
 
 // DELETE /api/dynamic/:entity/:id
-router.delete("/:entity/:id", authMiddleware, validateEntity, async (req: AuthRequest, res: Response) => {
+router.delete("/:entity/:id", conditionalAuth, validateEntity, async (req: AuthRequest, res: Response) => {
   const entity = req.params.entity as string;
   const id = req.params.id as string;
   const userId = req.user!.id;
@@ -164,7 +173,7 @@ router.delete("/:entity/:id", authMiddleware, validateEntity, async (req: AuthRe
 
 // CSV IMPORT SYSTEM
 // POST /api/dynamic/:entity/import
-router.post("/:entity/import", authMiddleware, validateEntity, upload.single("file"), async (req: AuthRequest, res: Response) => {
+router.post("/:entity/import", conditionalAuth, validateEntity, upload.single("file"), async (req: AuthRequest, res: Response) => {
   const entity = req.params.entity as string;
   const entityConfig = (req as any).entityConfig;
   const userId = req.user!.id;
