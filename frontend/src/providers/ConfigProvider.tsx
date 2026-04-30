@@ -35,7 +35,7 @@ export const ConfigProvider = ({ children }: { children: React.ReactNode }) => {
         setError(null);
       } else {
         setConfig(parsed.data); // Fallback to whatever it could parse
-        console.warn("Using partial/default config due to parse errors.", parsed.error);
+        console.warn("Using partial/default config due to parse errors.", parsed.errors);
       }
     } catch (err) {
       console.error("Failed to fetch configuration", err);
