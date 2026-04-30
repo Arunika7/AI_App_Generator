@@ -1,0 +1,53 @@
+{
+  "appName": "Dynamic CRM Platform",
+  "auth": true,
+  "entities": [
+    {
+      "name": "customers",
+      "enableEvents": true,
+      "fields": [
+        { "name": "first_name", "type": "text", "required": true },
+        { "name": "last_name", "type": "text", "required": true },
+        { "name": "email", "type": "email", "required": true },
+        { "name": "lifetime_value", "type": "number", "required": false }
+      ]
+    },
+    {
+      "name": "products",
+      "enableEvents": false,
+      "fields": [
+        { "name": "title", "type": "text", "required": true },
+        { "name": "price", "type": "number", "required": true },
+        { "name": "sku", "type": "text", "required": false }
+      ]
+    }
+  ],
+  "ui": [
+    { "type": "form", "entity": "customers" },
+    { "type": "table", "entity": "customers" },
+    { "type": "chart", "entity": "customers" },
+    { "type": "form", "entity": "products" },
+    { "type": "table", "entity": "products" },
+    { "type": "unknown_component", "entity": "students" }
+  ],
+  "translations": {
+    "en": {
+      "first_name": "First Name",
+      "last_name": "Last Name",
+      "email": "Email Address",
+      "lifetime_value": "LTV",
+      "title": "Product Title",
+      "price": "Price (USD)",
+      "sku": "SKU Code"
+    },
+    "es": {
+      "first_name": "Nombre",
+      "last_name": "Apellido",
+      "email": "Correo Electrónico",
+      "lifetime_value": "Valor de Vida",
+      "title": "Título del Producto",
+      "price": "Precio",
+      "sku": "Código SKU"
+    }
+  }
+}
