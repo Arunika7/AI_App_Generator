@@ -5,7 +5,7 @@ import { useConfig } from "../../providers/ConfigProvider";
 import api from "../../lib/api";
 import { 
   Wand2, Play, AlertTriangle, RotateCcw, Database, FileJson, History,
-  Send, Bot, User, CheckCircle2, Copy, Sparkles, PlusCircle, LayoutDashboard, Settings
+  Send, Bot, User, CheckCircle2, Copy, Sparkles, PlusCircle, LayoutDashboard, Settings, X
 } from "lucide-react";
 import { DynamicRenderer } from "../../components/DynamicRenderer";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -142,6 +142,36 @@ export default function BuilderPage() {
       setPreviewEntity(null);
       setChatLog([{ role: "system", content: "Application has been completely reset. What would you like to build?" }]);
       pushHistory(emptyConfig);
+    } finally {
+      setLoading(false);
+      setSyncStatus(null);
+    }
+  };
+
+  const handleDeleteEntity = async (entityName: string) => {
+    if (!config) return;
+    if (!confirm(`Are you sure you want to delete the '${entityName}' entity?`)) return;
+    
+    setLoading(true);
+    setSyncStatus(`Deleting ${entityName}...`);
+    try {
+      const newConfig = {
+        ...config,
+        entities: config.entities.filter(e => e.name !== entityName),
+        ui: config.ui.filter(u => u.entity !== entityName)
+      };
+      
+      await api.put("/builder/config", newConfig);
+      await refreshConfig();
+      pushHistory(newConfig);
+      
+      setChatLog(prev => [...prev, { role: "system", content: `Deleted entity '${entityName}' and its associated UI.` }]);
+      
+      if (previewEntity === entityName) {
+        setPreviewEntity(newConfig.entities.length > 0 ? newConfig.entities[0].name : null);
+      }
+    } catch (err) {
+      alert("Failed to delete entity");
     } finally {
       setLoading(false);
       setSyncStatus(null);
@@ -302,14 +332,22 @@ export default function BuilderPage() {
           </div>
           
           <div className="flex items-center gap-2">
-            {config?.entities.map(e => (
-               <button 
-                 key={e.name}
-                 onClick={() => setPreviewEntity(e.name)}
-                 className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all capitalize border ${previewEntity === e.name ? 'bg-indigo-600 text-white border-indigo-600 shadow-md' : 'bg-white text-slate-600 hover:bg-slate-50 border-slate-200 shadow-sm'}`}
-               >
-                 {e.name}
-               </button>
+            {config?.entities.map((e, idx) => (
+               <div key={`${e.name}-${idx}`} className="flex items-center">
+                 <button 
+                   onClick={() => setPreviewEntity(e.name)}
+                   className={`px-3 py-1.5 text-xs font-bold rounded-l-lg transition-all capitalize border-y border-l ${previewEntity === e.name ? 'bg-indigo-600 text-white border-indigo-600 shadow-md z-10' : 'bg-white text-slate-600 hover:bg-slate-50 border-slate-200 shadow-sm'}`}
+                 >
+                   {e.name}
+                 </button>
+                 <button 
+                   onClick={() => handleDeleteEntity(e.name)}
+                   className={`px-2 py-1.5 border-y border-r rounded-r-lg transition-all ${previewEntity === e.name ? 'bg-indigo-700 text-indigo-100 border-indigo-700 hover:bg-indigo-800 shadow-md z-10' : 'bg-white text-slate-400 hover:text-red-500 hover:bg-red-50 border-slate-200 shadow-sm'}`}
+                   title={`Delete ${e.name}`}
+                 >
+                   <X className="w-3.5 h-3.5" />
+                 </button>
+               </div>
             ))}
           </div>
         </div>

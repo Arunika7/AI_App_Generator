@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import api from "../lib/api";
-import { EntityConfig } from "../../../../shared/config";
+import { EntityConfig } from "../../../shared/config";
 import { useI18n } from "../providers/I18nProvider";
 import { Upload, Trash2, TableProperties, RefreshCw, FileDown } from "lucide-react";
 import Dropzone from "react-dropzone";

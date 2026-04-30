@@ -1,5 +1,5 @@
 import React from "react";
-import { EntityConfig } from "../../../../shared/config";
+import { EntityConfig } from "../../../shared/config";
 import { BarChart3 } from "lucide-react";
 
 export default function ChartComponent({ entityConfig }: { entityConfig?: EntityConfig }) {

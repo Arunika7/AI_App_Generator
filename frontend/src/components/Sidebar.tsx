@@ -44,9 +44,9 @@ export function Sidebar() {
             <div className="pt-4 pb-2">
               <p className="px-3 text-xs font-semibold text-purple-300/50 uppercase tracking-wider mb-2">Generated Apps</p>
               <div className="space-y-1">
-                {entities.map((entity) => (
+                {entities.map((entity, idx) => (
                   <Link
-                    key={entity.name}
+                    key={`${entity.name}-${idx}`}
                     href={`/app/${entity.name}`}
                     className="flex items-center gap-3 p-2.5 px-3 rounded-xl hover:bg-white/5 transition-all duration-200 text-slate-300 hover:text-white group"
                   >

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { UIComponentConfig } from "../../../../shared/config";
+import { UIComponentConfig } from "../../../shared/config";
 import { useConfig } from "../providers/ConfigProvider";
 import DynamicTable from "./DynamicTable";
 import DynamicForm from "./DynamicForm";

@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import api from "../lib/api";
-import { EntityConfig } from "../../../../shared/config";
+import { EntityConfig } from "../../../shared/config";
 import { useI18n } from "../providers/I18nProvider";
 import { CheckCircle2, AlertCircle, Send, Plus } from "lucide-react";
 
