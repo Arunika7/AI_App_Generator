@@ -243,10 +243,10 @@ router.post("/:entity/import", conditionalAuth, validateEntity, upload.single("f
         await client.query('COMMIT');
         triggerEvent(currentConfig, entity, "CREATE", { bulkImport: true, count: insertedCount });
         res.json({ message: `Successfully imported ${insertedCount} rows.` });
-      } catch (error) {
+      } catch (error: any) {
         await client.query('ROLLBACK');
         console.error(`CSV Import Error:`, error);
-        res.status(500).json({ error: "Failed to import CSV data." });
+        res.status(500).json({ error: `Import failed: ${error.message}` });
       } finally {
         client.release();
       }

@@ -53,8 +53,9 @@ export default function DynamicTable({ entityConfig }: { entityConfig: EntityCon
       });
       alert(t("import_success") || "Import successful");
       fetchData(); // Refresh table
-    } catch (err) {
-      alert(t("import_failed") || "Import failed");
+    } catch (err: any) {
+      const errorMsg = err.response?.data?.error || "Import failed. Check CSV format.";
+      alert(errorMsg);
       setLoading(false);
     }
   };

@@ -1,5 +1,5 @@
 {
-  "appName": "AI App Generator",
+  "appName": "Dynamic App",
   "auth": false,
   "entities": [
     {
@@ -27,37 +27,6 @@
         }
       ],
       "enableEvents": true
-    },
-    {
-      "name": "crm",
-      "fields": [
-        {
-          "name": "name",
-          "type": "text",
-          "required": true
-        },
-        {
-          "name": "email",
-          "type": "email",
-          "required": true
-        },
-        {
-          "name": "phone",
-          "type": "text",
-          "required": false
-        },
-        {
-          "name": "company",
-          "type": "text",
-          "required": false
-        },
-        {
-          "name": "status",
-          "type": "text",
-          "required": false
-        }
-      ],
-      "enableEvents": true
     }
   ],
   "ui": [
@@ -68,14 +37,6 @@
     {
       "type": "table",
       "entity": "task"
-    },
-    {
-      "type": "form",
-      "entity": "crm"
-    },
-    {
-      "type": "table",
-      "entity": "crm"
     }
   ],
   "translations": {}
