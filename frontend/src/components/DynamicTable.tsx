@@ -16,7 +16,7 @@ export default function DynamicTable({ entityConfig }: { entityConfig: EntityCon
   const fetchData = async () => {
     try {
       setLoading(true);
-      const res = await api.get(`/${entityConfig.name}`);
+      const res = await api.get(`/dynamic/${entityConfig.name}`);
       setData(res.data);
     } catch (err) {
       setError(t("error_fetching_data") || "Error fetching data");
@@ -32,7 +32,7 @@ export default function DynamicTable({ entityConfig }: { entityConfig: EntityCon
   const handleDelete = async (id: number) => {
     if (!confirm(t("confirm_delete") || "Are you sure?")) return;
     try {
-      await api.delete(`/${entityConfig.name}/${id}`);
+      await api.delete(`/dynamic/${entityConfig.name}/${id}`);
       setData((prev) => prev.filter((item) => item.id !== id));
     } catch (err) {
       alert(t("delete_failed") || "Delete failed");
@@ -48,7 +48,7 @@ export default function DynamicTable({ entityConfig }: { entityConfig: EntityCon
 
     try {
       setLoading(true);
-      await api.post(`/${entityConfig.name}/import`, formData, {
+      await api.post(`/dynamic/${entityConfig.name}/import`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       alert(t("import_success") || "Import successful");

@@ -45,10 +45,10 @@ export default function Home() {
         </div>
         
         <h1 className="text-5xl md:text-6xl font-black mb-4 tracking-tight text-slate-900">
-          {config.appName || "Generated Platform"}
+          {config.appName || "Enterprise Nexus"}
         </h1>
         <p className="text-xl md:text-2xl text-slate-600 max-w-3xl leading-relaxed font-light">
-          Welcome to the dynamically generated platform. Your UI, routing, and components are fully synthesized from configuration.
+          A high-performance, schema-driven architecture. Experience seamless data management with interfaces that adapt instantly to your system configurations.
         </p>
       </div>
 

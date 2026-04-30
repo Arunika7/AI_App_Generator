@@ -28,7 +28,7 @@ export default function DynamicForm({ entityConfig }: { entityConfig: EntityConf
     setSuccess(false);
 
     try {
-      await api.post(`/${entityConfig.name}`, formData);
+      await api.post(`/dynamic/${entityConfig.name}`, formData);
       setSuccess(true);
       setFormData({}); // Reset
     } catch (err: any) {
