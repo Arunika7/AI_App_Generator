@@ -35,7 +35,16 @@ export async function syncSchema(config: AppConfig) {
   const client = await pool.connect();
 
   try {
-    // 1. Ensure basic auth tables exist if auth is enabled
+    // 1. Ensure basic core tables exist
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS app_configs (
+        id SERIAL PRIMARY KEY,
+        config JSONB NOT NULL,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+    console.log("✅ [Schema Sync] Verified core app_configs table.");
+
     if (config.auth) {
       await client.query(`
         CREATE TABLE IF NOT EXISTS users (

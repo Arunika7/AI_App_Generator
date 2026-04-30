@@ -27,6 +27,32 @@
         }
       ],
       "enableEvents": true
+    },
+    {
+      "name": "gym",
+      "fields": [
+        {
+          "name": "name",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "membership_type",
+          "type": "text",
+          "required": false
+        },
+        {
+          "name": "join_date",
+          "type": "date",
+          "required": false
+        },
+        {
+          "name": "phone",
+          "type": "text",
+          "required": false
+        }
+      ],
+      "enableEvents": true
     }
   ],
   "ui": [
@@ -37,6 +63,14 @@
     {
       "type": "table",
       "entity": "task"
+    },
+    {
+      "type": "form",
+      "entity": "gym"
+    },
+    {
+      "type": "table",
+      "entity": "gym"
     }
   ],
   "translations": {}

@@ -6,6 +6,7 @@ import path from "path";
 import rateLimit from "express-rate-limit";
 import { parseConfig } from "../../shared/config";
 import { syncSchema } from "./services/schemaSync";
+import { getConfig } from "./services/configService";
 import authRoutes from "./routes/auth";
 import dynamicRoutes, { setAppConfig } from "./routes/dynamic";
 import builderRoutes from "./routes/builder";
@@ -26,25 +27,8 @@ app.use(
 
 const PORT = process.env.PORT || 5000;
 
-// Load config
-const loadConfig = async () => {
-  try {
-    const configPath = path.join(__dirname, "../../app-config.json");
-    if (!fs.existsSync(configPath)) {
-      console.warn("[CONFIG WARNING] app-config.json not found! System will use empty defaults.");
-      return parseConfig({}).data; // Fallback
-    }
-    const rawData = fs.readFileSync(configPath, "utf-8");
-    const parsed = parseConfig(JSON.parse(rawData));
-    return parsed.data;
-  } catch (error) {
-    console.error("[CONFIG ERROR] Failed to read/parse config file. Using defaults.");
-    return parseConfig({}).data;
-  }
-};
-
 const init = async () => {
-  const config = await loadConfig();
+  const config = await getConfig();
   
   // Set config for dynamic routes
   setAppConfig(config);
