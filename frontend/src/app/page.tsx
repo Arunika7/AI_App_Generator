@@ -1,93 +1,104 @@
 "use client";
 
-import React from "react";
-import { useConfig } from "../providers/ConfigProvider";
-import Link from "next/link";
-import { Sparkles, ArrowRight, Loader2, AlertCircle, LayoutTemplate } from "lucide-react";
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Sparkles, ArrowRight, Zap, Database, CheckCircle2 } from "lucide-react";
 
-export default function Home() {
-  const { config, loading, error } = useConfig();
+export default function LandingPage() {
+  const [prompt, setPrompt] = useState("");
+  const router = useRouter();
 
-  if (loading) return (
-    <div className="flex flex-col items-center justify-center h-[70vh] space-y-4">
-      <div className="relative">
-        <div className="absolute inset-0 bg-fuchsia-400 blur-xl opacity-30 animate-pulse rounded-full"></div>
-        <Loader2 className="w-12 h-12 text-fuchsia-600 animate-spin relative z-10" />
-      </div>
-      <p className="text-lg font-medium text-slate-600 animate-pulse">Orchestrating your platform...</p>
-    </div>
-  );
-  
-  if (error) return (
-    <div className="max-w-2xl mx-auto mt-20 p-8 bg-red-50/80 backdrop-blur-sm border border-red-200 rounded-3xl shadow-xl flex items-start gap-4">
-      <div className="p-3 bg-red-100 rounded-full text-red-600 shrink-0">
-        <AlertCircle className="w-6 h-6" />
-      </div>
-      <div>
-        <h2 className="text-xl font-bold text-red-800 mb-2">Configuration Error</h2>
-        <p className="text-red-600/90 leading-relaxed">{error}</p>
-      </div>
-    </div>
-  );
-  
-  if (!config) return <div className="p-10 text-slate-500 font-medium text-center">No config loaded. Ensure the backend is providing a valid app configuration.</div>;
+  const handleGenerate = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!prompt.trim()) return;
+    router.push(`/builder?prompt=${encodeURIComponent(prompt)}`);
+  };
+
+  const samplePrompts = [
+    "Student management system with grades",
+    "Gym app with members and classes",
+    "Todo list with deadlines and priority",
+    "Simple CRM for my real estate clients"
+  ];
 
   return (
-    <div className="max-w-6xl mx-auto mt-4 animate-in fade-in slide-in-from-bottom-8 duration-700">
-      <div className="mb-12 relative">
-        <div className="absolute -top-10 -left-10 w-40 h-40 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
-        <div className="absolute -top-10 -right-10 w-40 h-40 bg-yellow-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
-        <div className="absolute -bottom-10 left-20 w-40 h-40 bg-pink-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
-        
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 text-sm font-semibold mb-6 shadow-sm">
-          <Sparkles className="w-4 h-4 text-indigo-500" />
-          <span>Configured via JSON</span>
+    <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center relative overflow-hidden flex-1">
+      {/* Decorative Background */}
+      <div className="absolute top-[-20%] left-[-10%] w-[70%] h-[70%] bg-fuchsia-400/20 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-[-20%] right-[-10%] w-[70%] h-[70%] bg-indigo-400/20 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none opacity-50" />
+
+      <main className="max-w-4xl w-full px-6 relative z-10 flex flex-col items-center text-center -mt-16">
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/60 border border-fuchsia-200 text-fuchsia-700 font-bold text-sm mb-8 shadow-sm backdrop-blur-md">
+          <Sparkles className="w-4 h-4" /> AI App Generator Pro
         </div>
-        
-        <h1 className="text-5xl md:text-6xl font-black mb-4 tracking-tight text-slate-900">
-          {config.appName || "Enterprise Nexus"}
+
+        <h1 className="text-5xl md:text-7xl font-black text-slate-900 tracking-tight mb-6 leading-tight">
+          Build your app <br className="hidden md:block" />
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-600 to-indigo-600">with AI.</span>
         </h1>
-        <p className="text-xl md:text-2xl text-slate-600 max-w-3xl leading-relaxed font-light">
-          A high-performance, schema-driven architecture. Experience seamless data management with interfaces that adapt instantly to your system configurations.
+        
+        <p className="text-xl text-slate-600 mb-12 max-w-2xl font-medium">
+          No coding required. Just describe what you need, and we'll instantly generate the database, APIs, and a beautiful UI.
         </p>
-      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
-        {config.ui.map((uiItem, idx) => (
-          <Link 
-            key={idx} 
-            href={uiItem.entity ? `/${uiItem.entity}` : "#"}
-            className="group relative block p-8 bg-white/80 backdrop-blur-xl border border-slate-200/60 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgba(99,102,241,0.1)] hover:-translate-y-1 transition-all duration-300 overflow-hidden"
-          >
-            {/* Hover Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/0 via-transparent to-fuchsia-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            
-            <div className="relative z-10">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-100 to-purple-100 text-indigo-600 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-inner">
-                <LayoutTemplate className="w-6 h-6" />
-              </div>
-              
-              <h2 className="text-2xl font-bold text-slate-800 capitalize mb-3 group-hover:text-indigo-700 transition-colors">
-                {uiItem.entity || "Dashboard"}
-              </h2>
-              
-              <div className="flex items-center gap-2 mb-4">
-                <span className="px-2.5 py-1 text-xs font-bold uppercase tracking-wider bg-slate-100 text-slate-600 rounded-lg border border-slate-200">
-                  {uiItem.type}
-                </span>
-              </div>
-              
-              <p className="text-slate-500 text-sm leading-relaxed mb-6">
-                Dynamically generated {uiItem.type} interface mapped to the <strong className="font-semibold">{uiItem.entity}</strong> entity.
-              </p>
+        <form onSubmit={handleGenerate} className="w-full max-w-2xl relative mb-12 group">
+          <div className="absolute inset-0 bg-gradient-to-r from-fuchsia-500 to-indigo-500 rounded-3xl blur-xl opacity-20 group-focus-within:opacity-40 transition-opacity duration-500" />
+          <div className="relative bg-white rounded-3xl shadow-xl shadow-slate-200/50 border-2 border-white group-focus-within:border-fuchsia-200 transition-colors flex items-center p-2 overflow-hidden">
+            <input
+              type="text"
+              value={prompt}
+              onChange={(e) => setPrompt(e.target.value)}
+              placeholder="Describe the app you want to build..."
+              className="flex-1 bg-transparent border-none outline-none text-lg text-slate-800 px-6 py-4 placeholder:text-slate-400 font-medium"
+              autoFocus
+            />
+            <button 
+              type="submit"
+              disabled={!prompt.trim()}
+              className="bg-slate-900 hover:bg-fuchsia-600 disabled:bg-slate-300 disabled:text-slate-500 text-white p-4 rounded-2xl transition-colors shadow-sm"
+            >
+              <ArrowRight className="w-6 h-6" />
+            </button>
+          </div>
+        </form>
 
-              <div className="flex items-center text-sm font-semibold text-indigo-600 opacity-80 group-hover:opacity-100 group-hover:translate-x-1 transition-all">
-                Explore Module <ArrowRight className="w-4 h-4 ml-1" />
-              </div>
+        <div className="flex flex-wrap justify-center gap-3 max-w-3xl">
+          {samplePrompts.map((p, i) => (
+            <button
+              key={i}
+              onClick={() => { setPrompt(p); router.push(`/builder?prompt=${encodeURIComponent(p)}`); }}
+              className="px-5 py-2.5 bg-white/60 hover:bg-white backdrop-blur-sm border border-slate-200 hover:border-indigo-300 rounded-xl text-slate-600 hover:text-indigo-700 font-medium text-sm transition-all shadow-sm hover:shadow-md"
+            >
+              "{p}"
+            </button>
+          ))}
+        </div>
+
+        <div className="mt-24 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl w-full text-left">
+          <div className="bg-white/40 backdrop-blur-sm p-6 rounded-3xl border border-slate-200/60">
+            <div className="w-12 h-12 bg-fuchsia-100 rounded-2xl flex items-center justify-center mb-4 text-fuchsia-600">
+              <Zap className="w-6 h-6" />
             </div>
-          </Link>
-        ))}
-      </div>
+            <h3 className="font-bold text-slate-900 text-lg mb-2">Instant Generation</h3>
+            <p className="text-slate-500 text-sm font-medium">Watch your application come to life in real-time as the AI writes the code.</p>
+          </div>
+          <div className="bg-white/40 backdrop-blur-sm p-6 rounded-3xl border border-slate-200/60">
+            <div className="w-12 h-12 bg-indigo-100 rounded-2xl flex items-center justify-center mb-4 text-indigo-600">
+              <Database className="w-6 h-6" />
+            </div>
+            <h3 className="font-bold text-slate-900 text-lg mb-2">Full-Stack Architecture</h3>
+            <p className="text-slate-500 text-sm font-medium">Automatic Postgres migrations, Node.js APIs, and Next.js React components.</p>
+          </div>
+          <div className="bg-white/40 backdrop-blur-sm p-6 rounded-3xl border border-slate-200/60">
+            <div className="w-12 h-12 bg-emerald-100 rounded-2xl flex items-center justify-center mb-4 text-emerald-600">
+              <CheckCircle2 className="w-6 h-6" />
+            </div>
+            <h3 className="font-bold text-slate-900 text-lg mb-2">Production Ready</h3>
+            <p className="text-slate-500 text-sm font-medium">Built on enterprise-grade patterns. Export your code or deploy directly.</p>
+          </div>
+        </div>
+      </main>
     </div>
   );
 }

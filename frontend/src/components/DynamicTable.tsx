@@ -66,22 +66,22 @@ export default function DynamicTable({ entityConfig }: { entityConfig: EntityCon
   );
 
   return (
-    <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-200/60 overflow-hidden">
-      <div className="p-6 md:p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-slate-100 bg-white/40">
-        <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-fuchsia-50 rounded-xl text-fuchsia-600 shadow-inner">
-            <TableProperties className="w-6 h-6" />
+    <div className="bg-white rounded-[2rem] shadow-[0_8px_40px_rgb(0,0,0,0.06)] border border-slate-100 overflow-hidden relative">
+      <div className="p-8 md:p-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-slate-100 bg-white relative z-10">
+        <div className="flex items-center gap-4">
+          <div className="p-3 bg-fuchsia-50 rounded-2xl text-fuchsia-600 shadow-inner">
+            <TableProperties className="w-7 h-7" />
           </div>
           <div>
-            <h2 className="text-2xl font-bold text-slate-800 capitalize tracking-tight">{t(entityConfig.name)} <span className="text-slate-400 font-normal text-lg ml-1">Table</span></h2>
-            <p className="text-sm text-slate-500 font-medium">
-              {data.length} {data.length === 1 ? 'record' : 'records'} found
+            <h2 className="text-3xl font-extrabold text-slate-900 capitalize tracking-tight">{t(entityConfig.name)}</h2>
+            <p className="text-sm text-slate-500 font-bold mt-1 uppercase tracking-widest">
+              {data.length} {data.length === 1 ? 'Record' : 'Records'}
             </p>
           </div>
         </div>
         
-        <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
-          <button onClick={fetchData} className="p-2.5 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-colors border border-transparent hover:border-indigo-100 shadow-sm bg-white" title="Refresh">
+        <div className="flex flex-wrap items-center gap-4 w-full md:w-auto">
+          <button onClick={fetchData} className="p-3 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all border-2 border-transparent hover:border-indigo-100 shadow-sm bg-slate-50" title="Refresh">
             <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin text-indigo-500' : ''}`} />
           </button>
           
@@ -90,14 +90,14 @@ export default function DynamicTable({ entityConfig }: { entityConfig: EntityCon
             {({ getRootProps, getInputProps, isDragActive }) => (
               <div
                 {...getRootProps()}
-                className={`flex-1 md:flex-none flex items-center justify-center gap-2 cursor-pointer px-5 py-2.5 rounded-xl border-2 border-dashed transition-all font-semibold text-sm ${
+                className={`flex-1 md:flex-none flex items-center justify-center gap-3 cursor-pointer px-6 py-3 rounded-xl border-2 border-dashed transition-all font-bold text-sm ${
                   isDragActive 
                   ? 'bg-fuchsia-50 border-fuchsia-400 text-fuchsia-700 shadow-inner' 
-                  : 'bg-white hover:bg-slate-50 border-slate-200 hover:border-indigo-300 text-slate-600 hover:text-indigo-700 shadow-sm hover:shadow-md'
+                  : 'bg-white hover:bg-slate-50 border-slate-200 hover:border-slate-300 text-slate-700 shadow-sm hover:shadow-md'
                 }`}
               >
                 <input {...getInputProps()} />
-                <FileDown className={`w-4 h-4 ${isDragActive ? 'text-fuchsia-500 animate-bounce' : ''}`} />
+                <FileDown className={`w-5 h-5 ${isDragActive ? 'text-fuchsia-500 animate-bounce' : ''}`} />
                 <span>{isDragActive ? 'Drop CSV Here' : (t("import_csv") || "Import CSV")}</span>
               </div>
             )}
@@ -105,56 +105,69 @@ export default function DynamicTable({ entityConfig }: { entityConfig: EntityCon
         </div>
       </div>
 
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto relative z-10">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-slate-50/80 text-slate-500 text-xs uppercase tracking-wider font-bold">
+            <tr className="bg-slate-50 border-b-2 border-slate-100 text-slate-500 text-xs uppercase tracking-widest font-extrabold">
               {entityConfig.fields.map((field) => (
-                <th key={field.name} className="py-4 px-6 border-b border-slate-100 whitespace-nowrap">
-                  {t(field.name)}
+                <th key={field.name} className="py-5 px-8 whitespace-nowrap">
+                  {t(field.name).replace(/_/g, ' ')}
                 </th>
               ))}
-              <th className="py-4 px-6 border-b border-slate-100 text-right w-24">
+              <th className="py-5 px-8 text-right w-24">
                 {t("actions") || "Actions"}
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100/80">
+          <tbody className="divide-y divide-slate-100">
             {loading && data.length === 0 ? (
               <tr>
-                <td colSpan={entityConfig.fields.length + 1} className="py-12 text-center">
-                  <div className="inline-flex items-center gap-3 px-4 py-2 bg-indigo-50/50 text-indigo-600 rounded-full text-sm font-medium">
-                    <RefreshCw className="w-4 h-4 animate-spin" /> Loading data...
+                <td colSpan={entityConfig.fields.length + 1} className="py-16 text-center">
+                  <div className="inline-flex items-center gap-3 px-6 py-3 bg-indigo-50 text-indigo-700 rounded-2xl text-sm font-bold shadow-sm">
+                    <RefreshCw className="w-5 h-5 animate-spin" /> Fetching Data...
                   </div>
                 </td>
               </tr>
             ) : data.length === 0 ? (
               <tr>
-                <td colSpan={entityConfig.fields.length + 1} className="py-16 text-center">
-                  <div className="flex flex-col items-center gap-2">
-                    <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-2">
-                      <TableProperties className="w-8 h-8 text-slate-300" />
+                <td colSpan={entityConfig.fields.length + 1} className="py-24 text-center">
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-3 shadow-inner">
+                      <TableProperties className="w-10 h-10 text-slate-300" />
                     </div>
-                    <p className="text-slate-600 font-semibold">{t("no_data") || "No data available yet"}</p>
-                    <p className="text-slate-400 text-sm max-w-sm">Use the form above to add new entries or import a CSV file.</p>
+                    <p className="text-slate-800 text-xl font-extrabold tracking-tight">{t("no_data") || "No Records Found"}</p>
+                    <p className="text-slate-500 font-medium max-w-sm">Use the form to create new entries or drop a CSV file to import bulk data.</p>
                   </div>
                 </td>
               </tr>
             ) : (
               data.map((row, idx) => (
                 <tr key={row.id || idx} className="hover:bg-slate-50/80 transition-colors group">
-                  {entityConfig.fields.map((field) => (
-                    <td key={field.name} className="py-4 px-6 text-slate-700 font-medium">
-                      <div className="max-w-[200px] truncate" title={row[field.name]?.toString()}>
-                        {row[field.name]?.toString() || <span className="text-slate-300 font-normal italic">Empty</span>}
-                      </div>
+                  {entityConfig.fields.map((field, colIdx) => (
+                    <td key={field.name} className="py-5 px-8 text-slate-800 font-semibold">
+                      {colIdx === 0 && row[field.name] ? (
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-100 to-fuchsia-100 text-indigo-700 flex items-center justify-center font-bold text-xs uppercase shadow-sm border border-white">
+                            {row[field.name].toString().charAt(0)}
+                          </div>
+                          <span className="max-w-[200px] truncate">{row[field.name].toString()}</span>
+                        </div>
+                      ) : (
+                        <div className="max-w-[200px] truncate" title={row[field.name]?.toString()}>
+                          {row[field.name] ? (
+                            field.type === 'date' ? new Date(row[field.name]).toLocaleDateString() : row[field.name].toString()
+                          ) : (
+                            <span className="text-slate-300 font-medium italic">—</span>
+                          )}
+                        </div>
+                      )}
                     </td>
                   ))}
-                  <td className="py-4 px-6 text-right">
+                  <td className="py-5 px-8 text-right">
                     <div className="flex justify-end">
                       <button
                         onClick={() => handleDelete(row.id)}
-                        className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all opacity-0 group-hover:opacity-100 focus:opacity-100"
+                        className="p-2.5 text-slate-400 hover:text-white hover:bg-rose-500 rounded-xl transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 shadow-sm"
                         title="Delete Record"
                       >
                         <Trash2 className="w-4 h-4" />

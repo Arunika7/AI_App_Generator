@@ -1,6 +1,6 @@
 {
   "appName": "Dynamic CRM Platform",
-  "auth": true,
+  "auth": false,
   "entities": [
     {
       "name": "customers",

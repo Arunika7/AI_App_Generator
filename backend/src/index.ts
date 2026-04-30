@@ -8,6 +8,7 @@ import { parseConfig } from "../../shared/config";
 import { syncSchema } from "./services/schemaSync";
 import authRoutes from "./routes/auth";
 import dynamicRoutes, { setAppConfig } from "./routes/dynamic";
+import builderRoutes from "./routes/builder";
 
 dotenv.config();
 
@@ -60,6 +61,7 @@ const init = async () => {
   // Mount routes
   app.use("/api/auth", authRoutes);
   app.use("/api/dynamic", dynamicRoutes);
+  app.use("/api/builder", builderRoutes);
 
   // Fallback error handler with structured logging
   app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {

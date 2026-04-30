@@ -24,8 +24,8 @@ export const TranslationsSchema = z.record(
 );
 
 export const AppConfigSchema = z.object({
-  appName: z.string().default("Generated App"),
-  auth: z.boolean().default(true),
+  appName: z.string().default("AI App Generator"),
+  auth: z.boolean().default(false),
   entities: z.array(EntitySchema).default([]),
   ui: z.array(UIComponentSchema).default([]),
   translations: TranslationsSchema.default({}),
