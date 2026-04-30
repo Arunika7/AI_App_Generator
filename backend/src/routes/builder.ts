@@ -7,7 +7,7 @@ import { syncSchema } from "../services/schemaSync";
 import { parsePromptToConfig } from "../services/aiParser";
 
 const router = Router();
-const configPath = path.join(__dirname, "../../../../app-config.json");
+const configPath = path.join(__dirname, "../../../app-config.json");
 
 // Helper to read config safely
 const readConfig = (): AppConfig => {

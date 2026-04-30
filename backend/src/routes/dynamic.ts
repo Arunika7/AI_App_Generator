@@ -191,10 +191,23 @@ router.post("/:entity/import", conditionalAuth, validateEntity, upload.single("f
     .on("data", (data: any) => {
       // Basic mapping: only pick fields defined in config
       const mappedRow: any = {};
+      let hasData = false;
+      
+      // Case-insensitive matching for columns
+      const dataKeys = Object.keys(data);
+      
       for (const field of fields) {
-        mappedRow[field] = data[field] || null; // Map matching columns
+        // Try exact match first, then case-insensitive
+        const exactKey = dataKeys.find(k => k === field);
+        const caseKey = dataKeys.find(k => k.toLowerCase() === field.toLowerCase());
+        const key = exactKey || caseKey;
+        
+        const val = key ? data[key] : null;
+        mappedRow[field] = val || null;
+        if (val !== null && val !== undefined && val !== "") hasData = true;
       }
-      results.push(mappedRow);
+      
+      if (hasData) results.push(mappedRow);
     })
     .on("end", async () => {
       // Cleanup file
