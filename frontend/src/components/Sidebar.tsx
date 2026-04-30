@@ -3,10 +3,12 @@
 import React from "react";
 import Link from "next/link";
 import { useConfig } from "../providers/ConfigProvider";
-import { LayoutDashboard, Home, Database, Sparkles } from "lucide-react";
+import { useAuth } from "../providers/AuthProvider";
+import { LayoutDashboard, Home, Database, Sparkles, LogIn, UserPlus, LogOut } from "lucide-react";
 
 export function Sidebar() {
   const { config } = useConfig();
+  const { user, logout } = useAuth();
   const entities = config?.entities || [];
 
   return (
@@ -62,15 +64,30 @@ export function Sidebar() {
       
       {/* Footer Profile */}
       <div className="mt-auto relative z-10 bg-black/20 p-4 rounded-xl border border-white/5 backdrop-blur-sm m-4">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-fuchsia-500 to-indigo-500 border-2 border-white/20 flex items-center justify-center font-bold text-sm shadow-inner">
-            AG
+        {user ? (
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-fuchsia-500 to-indigo-500 border-2 border-white/20 flex items-center justify-center font-bold text-sm shadow-inner uppercase">
+                {user.email.substring(0, 2)}
+              </div>
+              <div className="max-w-[120px]">
+                <p className="text-xs font-semibold truncate">{user.email}</p>
+                <button onClick={logout} className="text-[10px] text-fuchsia-400 hover:text-fuchsia-300 font-bold uppercase tracking-tighter transition-colors">Logout Account</button>
+              </div>
+            </div>
           </div>
-          <div>
-            <p className="text-sm font-semibold">AI App Generator</p>
-            <p className="text-xs text-purple-300">Admin Account</p>
+        ) : (
+          <div className="space-y-2">
+            <Link href="/login" className="flex items-center justify-center gap-2 w-full py-2 bg-white/10 hover:bg-white/20 rounded-lg text-xs font-bold transition-all border border-white/5">
+              <LogIn className="w-3 h-3" />
+              Sign In
+            </Link>
+            <Link href="/register" className="flex items-center justify-center gap-2 w-full py-2 bg-indigo-600 hover:bg-indigo-700 rounded-lg text-xs font-bold transition-all shadow-lg shadow-indigo-500/20">
+              <UserPlus className="w-3 h-3" />
+              Sign Up
+            </Link>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

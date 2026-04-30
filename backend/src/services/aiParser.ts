@@ -29,6 +29,17 @@ export const parsePromptToConfig = (prompt: string, currentConfig?: AppConfig) =
 
   const isAddition = normalized.includes("add") || normalized.includes("include");
   const isRemoval = normalized.includes("remove") || normalized.includes("delete");
+  const isAuthToggle = normalized.includes("auth") || normalized.includes("login") || normalized.includes("signup");
+  
+  if (isAuthToggle && (normalized.includes("enable") || normalized.includes("add"))) {
+    newConfig.auth = true;
+    return { config: newConfig, message: "Authentication system enabled for the application." };
+  }
+  
+  if (isAuthToggle && (normalized.includes("disable") || normalized.includes("remove"))) {
+    newConfig.auth = false;
+    return { config: newConfig, message: "Authentication system disabled." };
+  }
   
   // 1. Detect if modifying existing entity
   let activeEntity = newConfig.entities.length > 0 ? newConfig.entities[newConfig.entities.length - 1] : null;
